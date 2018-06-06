@@ -8,7 +8,7 @@ before_install:
 
 before_script:
   # Download Textlive 2018 Installer
-  - curl -sL http://mirror.utexas.edu/ctan/systems/texlive/tlnet/install-tl-unx.tar.gz | tar zxf -
+  - curl -sL http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz | tar zxf -
   - mv install-tl-2018* install-tl
   - cd install-tl
   - echo "selected_scheme scheme-small" > profile
