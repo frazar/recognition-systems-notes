@@ -27,6 +27,7 @@ before_script:
   - sudo $(which tlmgr) install listings
   - sudo $(which tlmgr) install mathtools
   - sudo $(which tlmgr) install physics
+  - sudo $(which tlmgr) install cancel
   # Check which tex packages we have available
   - tlmgr info --only-installed ||
         echo "Couldn't retrieve the texlive package list\!"
