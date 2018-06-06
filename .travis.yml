@@ -32,7 +32,10 @@ before_script:
   - tlmgr info --only-installed ||
         echo "Couldn't retrieve the texlive package list\!"
 script:
-  - pdflatex -halt-on-error -interaction nonstopmode document.tex &&
-    bibtex document.tex &&
-    pdflatex -halt-on-error -interaction nonstopmode document.tex &&
-    pdflatex -halt-on-error -interaction nonstopmode document.tex
+  - pdflatex -halt-on-error -interaction nonstopmode document.tex
+  # IF REFERENCES ARE PRESENT
+  # - pdflatex -halt-on-error -interaction nonstopmode document.tex &&
+  #   bibtex document.tex &&
+  #   pdflatex -halt-on-error -interaction nonstopmode document.tex &&
+  #   pdflatex -halt-on-error -interaction nonstopmode document.tex
+
