@@ -31,6 +31,7 @@ before_script:
   # Check which tex packages we have available
   - tlmgr info --only-installed ||
         echo "Couldn't retrieve the texlive package list\!"
+
 script:
   - pdflatex -halt-on-error -interaction nonstopmode document.tex
   # IF REFERENCES ARE PRESENT
@@ -38,4 +39,16 @@ script:
   #   bibtex document.tex &&
   #   pdflatex -halt-on-error -interaction nonstopmode document.tex &&
   #   pdflatex -halt-on-error -interaction nonstopmode document.tex
+
+before_deploy:
+    # Set up git user name and tag this commit
+    - git config --local user.name "frazar0"
+    - git config --local user.email "frazar0@hotmail.it"
+    - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+
+deploy:
+  provider: releases
+  api_key: "$GITHUB_OAUTH_TOKEN"
+  file: "document.pdf"
+  skip_cleanup: true
 
