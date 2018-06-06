@@ -8,6 +8,8 @@ before_install:
 before_script:
   # Check texlive version
   - tlmgr version -v
+  # Initialize some data structure required for tlmgr
+  - sudo tlmgr init-usertree
   - sudo tlmgr install enumitem
   - sudo tlmgr install geometry
   - sudo tlmgr install hyperref
