@@ -21,12 +21,12 @@ before_script:
   - tlmgr version -v
   # Initialize some data structure required for tlmgr
   - tlmgr init-usertree
-  - tlmgr install enumitem
-  - tlmgr install geometry
-  - tlmgr install hyperref
-  - tlmgr install listings
-  - tlmgr install mathtools
-  - tlmgr install physics
+  - sudo tlmgr install enumitem
+  - sudo tlmgr install geometry
+  - sudo tlmgr install hyperref
+  - sudo tlmgr install listings
+  - sudo tlmgr install mathtools
+  - sudo tlmgr install physics
   # Check which tex packages we have available
   - tlmgr info --only-installed ||
         echo "Couldn't retrieve the texlive package list\!"
