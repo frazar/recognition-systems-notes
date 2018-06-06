@@ -12,7 +12,7 @@ before_script:
   - mv install-tl-2018* install-tl
   - cd install-tl
   - echo "selected_scheme scheme-small" > profile
-  - sudo ./install-tl -profile profile
+  - sudo ./install-tl -profile profile -repo http://ctan.mirrors.hoobly.com/systems/texlive/tlnet
   - cd ..
   - rm -rf install-tl
   # Update PATH
