@@ -20,16 +20,16 @@ before_script:
   # Check texlive version
   - tlmgr version -v
   # Initialize some data structure required for tlmgr
-  - sudo tlmgr init-usertree
-  - sudo tlmgr install enumitem
-  - sudo tlmgr install geometry
-  - sudo tlmgr install hyperref
-  - sudo tlmgr install listings
-  - sudo tlmgr install mathtools
-  - sudo tlmgr install physics
+  - tlmgr init-usertree
+  - tlmgr install enumitem
+  - tlmgr install geometry
+  - tlmgr install hyperref
+  - tlmgr install listings
+  - tlmgr install mathtools
+  - tlmgr install physics
   # Check which tex packages we have available
   - tlmgr info --only-installed ||
-        echo "Couldn't retrieve the texlive package list!"
+        echo "Couldn't retrieve the texlive package list\!"
 script:
   - pdflatex -halt-on-error -interaction nonstopmode document.tex &&
     bibtex document.tex &&
