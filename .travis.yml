@@ -13,7 +13,7 @@ before_install:
 
 before_script:
   # Export PATH
-  export PATH="/tmp/texlive/bin/x86_64-linux:$PATH"
+  - export PATH="/tmp/texlive/bin/x86_64-linux:$PATH"
   # Download Textlive 2018 Installer
   - ./texlive/install_texlive.sh
   # Install required packages
