@@ -38,9 +38,6 @@ then
     cd ..
     rm -rf install-tl
 
-    # Update PATH
-    export PATH="/tmp/texlive/bin/x86_64-linux:$PATH"
-
     # Initialize some data structure required for tlmgr
     tlmgr init-usertree
 
