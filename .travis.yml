@@ -14,6 +14,8 @@ before_install:
 before_script:
   # Download Textlive 2018 Installer
   - ./texlive/install_texlive.sh
+  # Export PATH
+  export PATH="/tmp/texlive/bin/x86_64-linux:$PATH"
   # Install required packages
   - tlmgr install l3packages
   - tlmgr install l3kernel
