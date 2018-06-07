@@ -1,4 +1,4 @@
-# recognition-systems-notes
+# recognition-systems-notes [![Build Status](https://travis-ci.org/frazar/recognition-systems-notes.svg?branch=master)](https://travis-ci.org/frazar/recognition-systems-notes)
 Notes from the "Recognition Systems" course held at University of Trento in Spring 2018
 
 # PDFs
