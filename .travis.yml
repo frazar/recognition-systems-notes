@@ -16,7 +16,7 @@ addons:
       - libgetopt-long-descriptive-perl
       - wget
       - python-pygments
-      - fontconfig"
+      - fontconfig
 
 before_script:
   # Export PATH
