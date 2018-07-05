@@ -1,7 +1,7 @@
-\documentclass[oneside,onecolumn]{article}
+\documentclass[oneside,onecolumn]{report}
 
 \usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
-\usepackage[linkcolor=blue]{hyperref}
+\usepackage[colorlinks=false,hidelinks,bookmarksdepth=3]{hyperref}
 \usepackage[utf8]{inputenc}
 \usepackage{amssymb}
 \usepackage{bm}
@@ -30,12 +30,52 @@
 
 \begin{document}
 
+
+\pagenumbering{gobble}
+\begin{titlepage}\
+
+        \vfill
+
+        \begin{center}
+            \huge \bfseries Notes from the course of \\
+        \end{center}
+
+        \begin{center}
+            \huge \bfseries Recognition Systems \\
+        \end{center}
+
+        \vskip2cm
+
+        \begin{center} \large
+            \today
+        \end{center}
+
+        \vfill
+
+
+    \vfill
+
+    {
+        \bfseries
+        Spring 2018
+    }
+\end{titlepage}
+
+
+\renewcommand{\thepage}{\roman{page}}
+\tableofcontents
+
+\clearpage
+
+\renewcommand{\thepage}{\arabic{page}} % Arabic numerals for page counter
+\setcounter{page}{1} % Start page number with 1
+
 % Don't indent paragraphs
 \setlength{\parindent}{0cm}
 
 
-
-\section{Introduction}
+\chapter{Introduction}
+\section{Basics of recognition systems}
 
 Data acquisition process
 \begin{itemize}
@@ -282,7 +322,8 @@ A kNN can be quite computationally inefficient as $k$ grows.
 
 
 \clearpage
-\section{Statistical estimation theory}
+\chapter{Statistical estimation theory}
+\section{Introduction to statistical estimation}
 
 We can categorize signals as follows:
 
@@ -315,9 +356,9 @@ We can categorize statistical estimation methods in two main categories.
 \end{itemize}
 
 
-\subsection{Estimator evaluations}
+\section{Estimator evaluations}
 
-\subsubsection{Biased and consistent estimators}
+\subsection{Biased and consistent estimators}
 The estimate is random variable that depends on the observation matrix $\bm X$.
 We define the estimation error $\bm \eps$ as
 $$ \bm \eps \triangleq \bm{\widehat \theta} - \bm \theta $$
@@ -360,7 +401,7 @@ $$ \lim_{n \to +\infty} \P(\norm{\bm \varepsilon} < \delta) = 1 \quad \forall \d
 
 
 
-\subsection{Maximum likelihood estimation}
+\section{Maximum likelihood estimation}
 Assume that the model of $\pdf(\bm x)$ is characterized by $r$ parameters $\bm \theta = (\theta_1, \ldots, \theta_r)$.
 The dependency of the model on $\bm \theta$ is highlighted by the following notation
 
@@ -396,7 +437,7 @@ The likelihood function is then
 
 Thus we got another gaussian! Now $\bm{\widehat \theta}$ can be found as the value maximizing this function.
 
-\subsubsection{Model selection}
+\subsection{Model selection}
 
 There are many models that can be chosen for Maximal Likelihood estimation
 \begin{itemize}
@@ -478,7 +519,7 @@ $$ \E{\widehat{\bm \Sigma}_\text{unbiased}}
 = \bm \Sigma $$
 
 
-\subsection{Bayesian estimation}
+\section{Bayesian estimation}
 The main difference between Bayesian and Maximum Likelihood estimation is that the former treats the model's parameters themselves as stochastic variables.
 
 Moreover, through Bayesian estimation we don't compute an estimate of the parameters of the model, but we compute the distribution itself.
@@ -523,7 +564,8 @@ and thus represents
 So, for example, when computing $\widehat \pdf(x)$ for a gaussian parametric model, we average all the possible gaussian models, but weighing every contribution on the basis of the posterior probability.
 
 
-\subsection{Intro to kNN and PW estimators}
+\section{kNN and PW estimators}
+\subsection{Introduction}
 
 Non-parametric estimators are chosen when
 \begin{itemize}
@@ -554,7 +596,7 @@ This leads to to two non-parametric estimator systems
     \item Parzen window: fix $V$, $k$ is computed using the training samples
 \end{enumerate}
 
-\subsubsection{Example: Univariate Gaussian model estimation}
+\subsection{Example: Univariate Gaussian model estimation}
 Assume we want to estimate the pdf of a univariate gaussian distribution with known variance $\sigma^2$.
 
 First, we compute the posterior probability
@@ -731,7 +773,7 @@ A commonly used kernel in the Parzen window estimation is the Guassian kernel wi
 However, in order to use the symmetrical window, the features along every dimension needs to be normalized.
 
 
-\subsection{Orthogonal Function Approximation}
+\section{Orthogonal Function Approximation}
 Estimate the unknown, true pdf $\pdf(x)$ in a different space, obtained with a set of basis function.
 The problem is finding the basis function and the coefficients of $\pdf(x)$ in that basis.
 
@@ -782,7 +824,7 @@ We can approximate the expected value by using the known training samples $x_1, 
 $$ c_j
 \approx \frac{1}{A_j} \frac{1}{N} \sum_{k = 1}^N u(x_k) \phi_j(x_k) $$
 
-\subsubsection{Deriving a set of 2D basis functions}
+\subsection{Deriving a set of 2D basis functions}
 Suppose we need a set of basis functions $\Psi_{1, 1}(x_1, x_2), \dots, \Psi_{n, n}(x_1, x_2)$ to describe a 2D space.
 We can do so by using a set of 1D basis functions $\psi_1(x), \dots, \psi_n(x)$ as shown next
 
@@ -799,7 +841,7 @@ Two common basis functions are
 \end{itemize}
 
 
-\subsection{Expectation maximization}
+\section{Expectation maximization}
 More like a framework rather then a method.
 It is used for
 \begin{itemize}
@@ -822,6 +864,7 @@ The algorithm for EM is the following:
 
 
 \clearpage
+\chapter{Features}
 \section{Feature reduction}
 It is not unusual to ideal with hundreds of features.
 But, after a certain point, adding new features doesn't yield higher accuracy.
@@ -1082,7 +1125,9 @@ It can be shown that $J(\bm W)$ is maximized when the columns of$\bm W$ are the 
 
 
 \clearpage
-\section{Supervised classification}
+\chapter{Supervised classification}
+
+\section{Introduction}
 Given a number of labelled samples find a partitioning of the sample space that leads the decision process.
 What we can do with the given samples is
 \begin{itemize}
@@ -1107,7 +1152,7 @@ We can cathegorize the supervised classification approaches as follows
     \end{itemize}
 \end{itemize}
 
-\subsection{Minimum Distance To Mean classifier}
+\section{Minimum Distance To Mean classifier}
 Assume that
 \begin{itemize}
     \item classes have low dispersion, or
@@ -1122,7 +1167,7 @@ Then given an unclassified sample $x$, we can
 
 This results in a linear partitioning of the solution space, as the resulting decision boundaries will be linear.
 
-\subsection{Box classifier}
+\section{Box classifier}
 In the MDMT classifier, only the 1st order statistic was used (i.e. the mean).
 Moreover, the MDMT classifier is based on very restrictive assumptions.
 
@@ -1136,7 +1181,7 @@ We can
     \item assign it to the box with the closest boundary
 \end{itemize}
 
-\subsection{Bayesian classification}
+\section{Bayesian classification}
 Bayesian classification is a general concept, and can be divided into different categories
 \begin{itemize}
     \item full problem parametrization: the posterior probability are known exactly
@@ -1150,7 +1195,7 @@ Bayesian classification is a general concept, and can be divided into different 
     \end{itemize}
 \end{itemize}
 
-\subsubsection{Maximum a posteriori criterion}
+\subsection{Maximum a posteriori criterion}
 The MAP criterion is used in most of the cases.
 
 If we didn't have the class-conditional pdfs, the decision criterion minimizing the error would be
@@ -1378,7 +1423,6 @@ We can study some particular cases
 
 
 
-\clearpage
 \section{Supervised signal detection}
 This section reports the supervised signal detection theory developed by the radar researchers in the past decades.
 The problem of signal detection in radar application can be seen as a binary classification problem, where we have to pick one of two hypothesis:
@@ -1903,7 +1947,9 @@ The development of a ANN usually consists in
 \end{enumerate}
 
 
-\subsection{Artificial Neuron}
+\clearpage
+\chapter{Artificial Neural Networks}
+\section{Introduction}
 The artificial neuron is the elementary unit of ANN architectures.
 It has a single output $y$ determined on the basis of a number of $N$ inputs $\bm x \in \mathbb R^N$ as follows
 $$ y = f\left( \sum_{i = 1}^N w_i x_i + \text{bias} \right) $$
@@ -2471,8 +2517,8 @@ Novelties of the GoogLeNet CNN architecture:
 
 
 
-
-\subsection{Support Vector Machine}
+\chapter{Support Vector Machine}
+\section{Introduction}
 The SVM theory was introduced in the 60s, but raised more interest in the 90s.
 SVMs are very successful as they overcome the over-fitting problem of MLPs.
 
@@ -2646,7 +2692,7 @@ Note that the ridge regression also admits a dual representation, where
 $$ f(\bm x) = \bm y^T (\lambda I + G)^{-1} \bm z $$
 where $z_i = \inp{\bm x}{\bm x_i}$.
 
-\subsection{Kernel representation}
+\section{Kernel representation}
 For complex problems, linear decision boundaries are not sufficient.
 Instead, we can transform the $n$-dimensional data in a different space, potentially with higher dimension $n'$, where the linear decision boundaries can be applied effectively.
 $$ \bm x \xrightarrow[\substack{\text{representation} \\ \text{process}}]{} \phi(\bm x) \xrightarrow[\substack{\text{decision} \\ \text{process}}]{} y $$
@@ -2787,7 +2833,7 @@ $$ \left[ \norm{\phi(\bm x_i) - \phi(\bm x_j)}^2 \right] = 2 (1 - \bm K) = \begi
 
 This means that all the different points coincide in the transformed dimension, and are thus perfectly overlapping.
 
-\subsection{Closure properties of kernels}
+\section{Closure properties of kernels}
 Starting from a kernel we can build other kernels using a number of manipulations, in particular
 \begin{enumerate}
     \item summing two kernels
@@ -2814,7 +2860,7 @@ In fact
     &= \underbrace{K_1(\bm x_1, \bm x_2) K_2(\bm x_1, \bm x_2)}_\text{valid for rule \#3}
 \end{align*}
 
-\subsection{Generalization theory}
+\section{Generalization theory}
 How can we guarantee good generalization properties?
 Kernels allow higher expressive power, but increase over-fitting risk.
 Many theories allow to estimate the generalization error.
@@ -2834,7 +2880,7 @@ This example is to highlight the need to balance
     \item the capacity of the machine.
 \end{itemize}
 
-\subsection{Generalization error}
+\section{Generalization error}
 Consider a simple regression problem, where we're trying to find the best guess for an unknown function $f_\text{real}(\bm x)$ that maps $\bm x_i$ samples into the corresponding $y_i$ value.
 
 We define the hypothesis space as the set of all the possible solutions given by our machine, e.g. the set of all linear functions.
@@ -2876,7 +2922,7 @@ where
 \end{itemize}
 Note that the upper bound does not depend any more on the joint probability distribution $\pdf(\bm x, y)$.
 
-\subsection{VC dimension}
+\section{VC dimension}
 Consider a set of $N$ samples labelled with either one of two classes, and a class of machines $\{f(\alpha)\}$.
 If for all the possible $2^N$ labelling of the $N$ samples, there exists a machine $f(\alpha)$ of the class consider that correctly classifies all the samples, then we say that this set of point is \textbf{shattered} by the class of functions $\{f(\alpha)\}$.
 
@@ -2903,7 +2949,7 @@ Thus, when choosing which class of machines to use for a specific classification
     \item if the empirical risk is different, then we choose the one with minimal risk bound.
 \end{itemize}
 
-\subsubsection{Structural Risk Minimization}
+\subsection{Structural Risk Minimization}
 SRM is an inductive principle for choosing the best machine class.
 It is based on the fact that,
 \begin{itemize}
@@ -2930,7 +2976,7 @@ There are some problems with this approach
 \end{itemize}
 
 
-\subsection{Margin-based bounds}
+\section{Margin-based bounds}
 Margin based bounds are used to tighten the upper bound on the expected risk.
 
 Suppose that $f(\bm x)$ is a real-valued function that will be thresholded at 0 to give $y$,
@@ -2942,7 +2988,7 @@ $$ M_S(f) = \{ \gamma_i : i = 1, \dots, N \} $$
 The margin with respect to the whole training set $S$ is defined as the minimum over the the margin distribution $M_S(f)$
 $$ \gamma = \min\{ M_S(f) \} $$
 
-\subsubsection{Margin-based bound}
+\subsection{Margin-based bound}
 Consider the space of real valued functions $F$, that will be thresholded at 0 to give $Y$.
 This space has some VC dimension $h$.
 
@@ -3025,7 +3071,7 @@ In the case where $\gamma = \theta$, then we're not tolerating any error, and mi
 We can also see soft-margin as a way to differentiate the tolerance between training (no error larger than $\theta - \gamma$, strict) and during the actual regression (no error larger than $\theta$, lax).
 
 
-\subsection{Support Vector Machine}
+\section{Support Vector Machine}
 SVM are machines for efficiently training linear machines
 \begin{itemize}
     \item in the kernel induced feature space,
@@ -3042,7 +3088,7 @@ The two key concepts of SVM are
 In the few last sections we have introduced a number of bounds.
 All machines minimizing any of these bounds are referred to as SVMs.
 
-\subsubsection{Maximal Margin Classifier}
+\subsection{Maximal Margin Classifier}
 The MMC constitutes the simplest SVM.
 It requires that the classes are linearly separable.
 The idea at its heart is to minimize the margin-based bound.
@@ -3198,7 +3244,7 @@ These samples are referred to \textbf{support vectors}.
 Another important consequence of the KKT complementary conditions is that, since $\alpha_i = 0$ of $i \not \in \text{SV}$, then
 $$ \gamma = \frac{1}{\norm{\bm w^*}} = \frac{1}{\displaystyle \sqrt{\sum_{i = 1}^N \alpha_i^*}} = \frac{1}{\displaystyle \sqrt{\sum_{i \in \text{SV}} \alpha_i^*}} $$
 
-\subsection{Kernelized MMC}
+\section{Kernelized MMC}
 Both the dual objective and the decision function have the property that the data only appears inside as an inner product.
 This makes it possible to apply MMC to the transformed feature space.
 
@@ -3220,7 +3266,7 @@ Now the geometric margin $\gamma$ will be defined within the transformed space.
 
 If $K(\cdot)$ satisfies the Mercer's condition (is positive semi-definite), then the optimization problem is again quadratic with a unique solution.
 
-\subsection{Sparseness}
+\section{Sparseness}
 Another bount on the generalization error can be derived by using the leave-one-out error estimation method.
 Since, when a non-SV sample is omitted during training, the result does not change, then we can found the following bound on the number of errors
 $$ \text{err}(f) \leq \frac{\#\text{SV}}{N} $$
@@ -3230,7 +3276,7 @@ This is a weak bound because it hash high variance, and depends highly on the tr
 It can also be used to stabilize the learning process when using semi-supervised learning, i.e. when unlabelled samples are used to improve on the supervised learning training.
 
 
-\subsection{Soft Margin Classification}
+\section{Soft Margin Classification}
 The MMC only works in the case of linearly separable classes.
 This is because it relies on the Margin Bound.
 An alternative SVM can be defined starting from the Soft Margin Bound.
@@ -3250,7 +3296,7 @@ Instead, we can include the slack term to ``ignore'' the samples that are over t
 $$ y_i (\inp{\bm w}{\bm x_i} + b) \geq 1 - \xi_i $$
 
 
-\subsubsection{2-norm Soft Margin Classifier}
+\subsection{2-norm Soft Margin Classifier}
 The primal optimization for the 2-NSMC is thus given by
 \begin{align*}
     &\text{Minimize   } \quad \psi(\bm w, \bm xi) = \frac{1}{2} \norm{\bm w}_2^2 + \frac{C}{2} \norm{\bm \xi}_2^2 \\
@@ -3397,7 +3443,7 @@ Thus
     \includegraphics[width=10cm]{support_vectors_1-NSMC.png}
 \end{center}
 
-\subsection{Multiclass SVM}
+\section{Multiclass SVM}
 SVM are formulated for binary classification.
 Some multi-class formulation have been presented in the literature.
 
@@ -3407,7 +3453,7 @@ The main idea is that of having a lot of binary SVMs in parallel, and then fusin
 Let $C$ be the number of classes
 $$ \widehat \omega = \argmax_{i = 1, \dots, C} \{S_i(\bm x)\} $$
 
-\subsubsection{One-Against-One strategy}
+\subsection{One-Against-One strategy}
 The score function is defined as
 $$ S_i(\bm x) = \sum_{\substack{j = 1 \\ j \neq i}}^C \sgn\{f_{i, j}(\bm x)\} $$
 where $f_{i, j}(\bm x)$ is the local discriminant function between classes $\omega_i$ and $\omega_j$.
@@ -3429,7 +3475,7 @@ This allows for
 However, it requires solving more complex binary classifications, thus increasing the training time and the prediction time.
 
 
-\subsection{Support Vector Regression}
+\section{Support Vector Regression}
 As done for the previous SVMs, the base of SVR is minimizing a generalization bound.
 The bound is the linear $\eps$-insensitive loss function, defined as
 $$ L_1^\eps(\bm x, y, f) = \max(0, \abs{y - f(\bm x)} - \eps) $$
@@ -3457,7 +3503,7 @@ The Support Vectors will now be the samples that lie outside of the $\eps$-insen
 In the dual linear formulation, we have a box condition on the Lagrange multipliers, like for the SVM.
 
 
-\subsection{SVM implementation techniques}
+\section{SVM implementation techniques}
 Training a SVM is simply a matter of maximizing a convex quadratic form subject to linear constraints.
 This problem is very well studied, and plenty of solutions exist.
 
@@ -3469,7 +3515,7 @@ To avoid this some methods are used
     \item Sequential Minimal Optimisation: at each iteration, consider only two samples (has an analytical solution)
 \end{itemize}
 
-\subsection{SVM recap}
+\section{SVM recap}
 Pros:
 \begin{itemize}
     \item no local minima
