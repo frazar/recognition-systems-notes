@@ -7,9 +7,16 @@ cache:
     - /tmp/texlive
     - $HOME/.texlive
 
-before_install:
-  - "sudo apt-get update"
-  - "sudo apt-get install -y gnupg curl libgetopt-long-descriptive-perl wget python-pygments fontconfig"
+addons:
+  apt:
+    update: true
+    packages:
+      - gnupg
+      - curl
+      - libgetopt-long-descriptive-perl
+      - wget
+      - python-pygments
+      - fontconfig"
 
 before_script:
   # Export PATH
