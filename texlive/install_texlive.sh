@@ -4,7 +4,7 @@
 set -ueo pipefail
 
 # Check if TexLive 2018 is already installed
-if [ ! -x "$(command -v foo)" ]
+if [ ! -x "$(command -v pdflatex)" ]
 then
     echo "Running TexLive 2018 installer."
 
