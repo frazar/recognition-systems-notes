@@ -1249,7 +1249,7 @@ $$ P_\text{err, min} = \int_{-\infty}^{+\infty} \min\left\{ \P(\omega_1 | x) \P(
 The ML criterion is a particular case of the MAP criterion, where the priors are equal (or unknown and assumed to be equal).
 In this the value of $\P(\omega_i)$ is always the same for all the classes and does not contribute to the decision.
 The ML criterion becomes
-$$ \widehat \omega = \argmax_{\omega_i} \{ \P(\bm x | \omega_i) \} $$
+$$ \widehat \omega = \argmax_{\omega_i} \{ \pdf(\bm x | \omega_i) \} $$
 
 \subsubsection{Minimum risk criterion}
 Sometimes, even though a class is less-likely to occur (i.e. has a low prior), mis-detecting it can lead to a great cost.
@@ -1345,7 +1345,7 @@ We can study some particular cases
     Then
     $$ g_i(\bm x)
     =
-    \underbrace{-\frac{1}{2} \sigma^2 \norm{\bm x}}_{\substack{\text{does not} \\ \text{depend on } i}}
+    \underbrace{-\frac{1}{2 \sigma^2} \norm{\bm x}}_{\substack{\text{does not} \\ \text{depend on } i}}
     + \frac{1}{\sigma^2} \bm m_i^T
     - \underbrace{\frac{1}{2} \ln(\sigma^{2 n})}_{\substack{\text{does not} \\ \text{depend on } i}}
     - \frac{1}{2} \frac{\norm{\bm m_i}^2}{\sigma^2}
@@ -1354,7 +1354,7 @@ We can study some particular cases
     Further removing the terms that do not depend on $i$ yields
     $$ g_i(\bm x) = \bm w_i^T \bm x + \text{bias}_i $$
     where
-    $$ \bm w_i = \frac{1}{\sigma^2} \bm m_i \quad \text{and} \quad \text{bias}_i = ln(\P(\omega_i)) - \frac{1}{2 \sigma^2} \norm{\bm m_i}^2 $$
+    $$ \bm w_i = \frac{1}{\sigma^2} \bm m_i \quad \text{and} \quad \text{bias}_i = \ln(\P(\omega_i)) - \frac{1}{2 \sigma^2} \norm{\bm m_i}^2 $$
 
     The discriminant function is thus linear with respect to $\bm x$!
     The decision boundary between the $i$-th and $j$-th classes will then be located at
