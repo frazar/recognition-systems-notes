@@ -540,7 +540,7 @@ $$ \widehat \pdf(x) = \pdf(x | X) $$
 Let us introduce $\bm \theta$ so that
 $$ \widehat \pdf(x) = \pdf(x | X) = \int \pdf(x, \theta | X) \dd \theta $$
 
-By applying Bayes theorem (????)
+By applying Bayes' theorem (????)
 $$ \widehat \pdf(x)
 = \int \pdf(x, \theta | X) \dd \theta
 = \int \pdf(x | \theta, X) \pdf(\theta | X) \dd \theta
@@ -1326,25 +1326,30 @@ For example,
 \end{itemize}
 
 Assume that the sample space is $n$-dimensional, and that the pdf of the $C$ classes considered are multi-variate gaussians, i.e.
-$$ \pdf(\bm x | \omega_i) = N(\bm m_i, \bm \Sigma_i) $$
+$$ \pdf(\bm x | \omega_i) = N(\bm m_i, \bm \Sigma_i) = \frac{1}{\sqrt{(2 \pi)^n \abs{\bm \Sigma_i}}} \exp(-\frac{1}{2} (\bm x - \bm \mu_i)^T \bm \Sigma_i^{-1} (\bm x - \bm \mu_i)) $$
 
 Consider the MAP criterion as implemented with discriminant functions.
 To simplify the computation, we will consider the logarithms $g_i$ of the posterior probabilities
 \begin{align*}
     g_i(\bm x)
     &\triangleq \ln(\P(\omega_i | \bm x)) \\
-    &= \ln(\pdf(\bm x | \omega_i)) + \ln(\P(\omega_i)) \\
+    &= \ln(\pdf(\bm x | \omega_i)) + \ln(\P(\omega_i)) & \text{for Bayes' theorem} \\
     &= -\frac{1}{2} (\bm x - \bm m_i)^T \bm \Sigma_i^{-1} (\bm x - \bm m_i) - \underbrace{\frac{n}{2} \ln(2 \pi)}_{\substack{\text{does not} \\ \text{depend on } i}} - \frac{1}{2} \ln(\abs{\bm \Sigma_i}) + \ln(\P(\omega_i))
 \end{align*}
+where $\abs{\bm \Sigma_i}$ indicates the determinant of the $\bm \Sigma_i$ matrix.
 
-We can disregard not depending on $i$, as it will not contribute to the decision process, obtaining
-$$ g_i(\bm x) = -\frac{1}{2} \left[ \bm x^T \bm \Sigma_i^{-1} \bm x - 2 \bm m_i^T \bm \Sigma_i^{-1} \bm x + \bm m_i^T \bm \Sigma_i^{-1} \bm m_i \right] - \frac{1}{2} \ln(\abs{\bm \Sigma_i}) + \ln(\P(\omega_i)) $$
+We can disregard the term not depending on $i$, as it will not contribute to the decision process, obtaining
+\begin{align*}
+    g_i(\bm x)
+    &= -\frac{1}{2} (\bm x - \bm m_i)^T \bm \Sigma_i^{-1} (\bm x - \bm m_i) - \frac{1}{2} \ln(\abs{\bm \Sigma_i}) + \ln(\P(\omega_i)) \\
+    &= -\frac{1}{2} \left[ \bm x^T \bm \Sigma_i^{-1} \bm x - 2 \bm m_i^T \bm \Sigma_i^{-1} \bm x + \bm m_i^T \bm \Sigma_i^{-1} \bm m_i \right] - \frac{1}{2} \ln(\abs{\bm \Sigma_i}) + \ln(\P(\omega_i))
+\end{align*}
 
-This functions combines the features quadratically.
-We can study some particular cases
+This function combines the features quadratically.
+We can study some particular cases:
 \begin{itemize}
     \item
-    If the features are completely independent, then the covariance matrices $\bm \Sigma_i$ are diagonal, and if they are also equal for all the classes ($\bm \Sigma_i \equiv \bm \Sigma$)
+    If the features are completely independent, then the covariance matrices $\bm \Sigma_i$ are diagonal, and, if they are also equal for all the classes ($\bm \Sigma_i \equiv \bm \Sigma$)
     $$ \bm \Sigma = \sigma^2 \bm I \quad \text{and} \quad \bm \Sigma^{-1} = \frac{1}{\sigma^2} \bm I \quad \text{and} \quad \abs{\bm \Sigma} = \sigma^{2 n} $$
 
     Then
@@ -1363,14 +1368,14 @@ We can study some particular cases
 
     The discriminant function is thus linear with respect to $\bm x$!
     The decision boundary between the $i$-th and $j$-th classes will then be located at
-    \begin{align*}
-        &g_i(\bm x) = g_j(\bm x) \\
-        &\bm w_i^T \bm x + \text{bias}_i = \bm w_j^T \bm x + \text{bias}_j \\
-        &\bm w^T (\bm x - \bm x_0) = 0 \quad \text{where} \quad \begin{dcases}
+    \begin{gather*}
+        g_i(\bm x) = g_j(\bm x) \\
+        \bm w_i^T \bm x + \text{bias}_i = \bm w_j^T \bm x + \text{bias}_j \\
+        \bm w^T (\bm x - \bm x_0) = 0 \quad \text{where} \quad \begin{dcases}
             \bm w = \bm w_i - \bm w_j \\
             \bm x_0 = \frac{1}{2} (\bm m_i + \bm m_j) + \frac{\sigma^2}{\norm{\bm m_i - \bm m_j}^2} \ln(\frac{\P(\omega_i)}{\P(\omega_j)}) (\bm m_i - \bm m_j)
         \end{dcases}
-    \end{align*}
+    \end{gather*}
 
     The decision boundary between the $i$-th and $j$-th classes is a hyperplane that passes through $\bm x_0$ and is orthogonal to $\bm w$.
 
@@ -1468,12 +1473,13 @@ The average cost is given by
     R
     &= \E{\text{cost}} \\
     &= c_{00} \P(D_0, H_0) + c_{10} \P(D_1, H_0) + c_{01} \P(D_0, H_1) + c_{11} \P(D_1, H_1) \\
-    &= c_{00} \P(D_0 | H_0) \P(H_0) + c_{10} \P(D_1 | H_0) \P(H_0) + c_{01} \P(D_0 | H_1) \P(H_1) + c_{11} \P(D_1 | H_1) \P(H_1) \\
+    &= c_{00} \P(D_0 | H_0) \P(H_0) + c_{10} \P(D_1 | H_0) \P(H_0) \\
+    &\quad + c_{01} \P(D_0 | H_1) \P(H_1) + c_{11} \P(D_1 | H_1) \P(H_1) & \text{for the definition of conditioned probability} \\
     &= c_{00} P_\text{CR} P_0 + c_{10} P_\text{FA} P_0 + c_{01} P_\text{MD} P_1 + c_{11} P_\text{D} P_1 \\
     &= c_{00} (1 - P_\text{FA}) P_0 + c_{10} P_\text{FA} P_0 + c_{01} (1 - P_\text{D}) P_1 + c_{11} P_\text{D} P_1 \\
     &= \underbrace{c_{00} P_0 + c_{01} P_1}_\text{constants w.r.t. $Z_1$} - c_{00} P_\text{FA} P_0 + c_{10} P_\text{FA} P_0 - c_{01} P_\text{D} P_1 + c_{11} P_\text{D} P_1 \\
     &= \text{const} + P_0 (c_{10} - c_{00}) P_\text{FA} - P_1 (c_{01} - c_{11}) P_\text{D} \\
-    &= \text{const} + \int_{Z_1} [ \underbrace{P_0 (c_{10} - c_{00}) \pdf(x | H_0)}_{\geq 0} - \underbrace{P_1 (c_{01} - c_{11}) \pdf(x | H_1)}_{\geq 0} ] \dd x \\
+    &= \text{const} + \int_{Z_1} [ \underbrace{P_0 (c_{10} - c_{00}) \pdf(x | H_0)}_{\geq 0} - \underbrace{P_1 (c_{01} - c_{11}) \pdf(x | H_1)}_{\geq 0} ] \dd x
 \end{align*}
 
 To minimize $R$, we should find $Z_1$ so that the sum in the first term in the integral be less than the second term in the integral.
@@ -1499,7 +1505,7 @@ Thus, the probability of false alarm $P_F$ and the probability of missed detecti
 $$ P_F = \P(D_1 | H_0) = \int_{Z_1} \pdf(x | H_0) \dd x \qquad
 P_M = \P(D_0 | H_1) = \int_{Z_0} \pdf(x | H_1) \dd x $$
 
-Finally, the minimum risk $R(P_1)$ associated with the priors $P_1$ are given by
+Finally, the average risk $R(P_1)$ associated to the prior $P_1$ is given by
 $$ R(P_1) =
 c_{00} (1 - P_F(P_1)) (1 - P_1) +
 c_{10} P_F(P_1) (1 - P_1) +
@@ -1603,7 +1609,7 @@ We can now find $\lambda$ itself by using the constraint
 \begin{gather*}
     P_F = \alpha \\
     \P(\Lambda(x) > \lambda | H_0) = \alpha \\
-    \int_\lambda^{+\infty} \pdf(\Lambda(x) | H_0) \dd x = \alpha \\
+    \int_\lambda^{+\infty} \pdf(\Lambda(x) | H_0) \dd x = \alpha
 \end{gather*}
 But since $\Lambda(x)$ does not depend on $H_0$,
 $$ \int_\lambda^{+\infty} \pdf(\Lambda(x)) \dd x = \alpha $$
@@ -1874,7 +1880,7 @@ Moreover, the global prior $\P(C_i)$ is given by
 \begin{align*}
     \P(C_i)
     &= \P(C(1, 1), C_{\text{without } (1, 1)}) \\
-    &= \P(C(1, 1) | C_{\text{without } (1, 1)}) \P(C_{\text{without } (1, 1)}) & \text{for Bayes theorem} \\
+    &= \P(C(1, 1) | C_{\text{without } (1, 1)}) \P(C_{\text{without } (1, 1)}) & \text{for Bayes' theorem} \\
     &= \P(C(1, 1) | C_{N(1, 1)}) \P(C_{\text{without } (1, 1)}) & \text{for the Markov property} \\
     &= \P(C(1, 1) | C_{N(1, 1)}) \P(C(1, 2), C_{\text{without } (1, 1), (1, 2)}) \\
     &= \dots \\
@@ -1921,7 +1927,7 @@ The three most popular optimization algorithms employed for minimizing the energ
     \item Iterate Conditional Modes (ICM).
 \end{itemize}
 
-We're only going to cover the ICM algotighm.
+We're only going to cover the ICM algorithm.
 It is an iterative algorithm following these steps:
 \begin{enumerate}
     \item Choose a MRF model for $I$, and label each pixel with the class that minimizes the energy, but without considering the other pixels (i.e. setting $U_\text{context} = 0$)
@@ -2225,7 +2231,7 @@ We might consider taking the mean of the different $y_i$ values, i.e.
     &= \int_{-\infty}^{+\infty} y \pdf(y | \bm x) \dd y \\
     &= \int_{-\infty}^{+\infty} y \frac{\pdf(y, \bm x)}{\pdf(\bm x)} \dd y \\
     &= \frac{\int_{-\infty}^{+\infty} y \pdf(y, \bm x) \dd y}{\pdf(\bm x)} \\
-    &= \frac{\displaystyle \int_{-\infty}^{+\infty} y \pdf(y, \bm x) \dd y}{\displaystyle \int_{-\infty}^{+\infty} \pdf(y, \bm x) \dd y} \\
+    &= \frac{\displaystyle \int_{-\infty}^{+\infty} y \pdf(y, \bm x) \dd y}{\displaystyle \int_{-\infty}^{+\infty} \pdf(y, \bm x) \dd y}
 \end{align*}
 
 We need only to find the joint pdf $\pdf(y, \bm x)$.
@@ -3342,7 +3348,7 @@ From the KKT conditions we know that, for all $i = 1, \dots, N$
 \begin{gather*}
     \alpha_i g_i(\bm w) = 0 \\
     \alpha_i \left[ 1 - \xi_i - y_i (\inp{\bm w}{\bm x_i} + b) \right] = 0 \\
-    \alpha_i - \alpha_i \xi_i - \alpha_i y_i \inp{\bm w}{\bm x_i} + \alpha_i y_i b = 0 \\
+    \alpha_i - \alpha_i \xi_i - \alpha_i y_i \inp{\bm w}{\bm x_i} + \alpha_i y_i b = 0
 \end{gather*}
 Summing over all the $N$ samples
 \begin{gather}
@@ -3530,3 +3536,4 @@ Cons:
     \item the outcome is not a probabilistic value, but it can be extracted in some way..
 \end{itemize}
 \end{document}
+
