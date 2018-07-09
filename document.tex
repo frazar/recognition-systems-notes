@@ -1132,10 +1132,10 @@ Given a number of labelled samples find a partitioning of the sample space that 
 What we can do with the given samples is
 \begin{itemize}
     \item find a model of the pdf of each class
-    \item gather the priors: class probability, costs etc
+    \item gather the priors: class probabilities, costs etc
 \end{itemize}
 
-We can cathegorize the supervised classification approaches as follows
+We can categorize the supervised classification approaches as follows
 \begin{itemize}
     \item parametric:
     \begin{itemize}
@@ -1161,8 +1161,9 @@ Assume that
 
 Then given an unclassified sample $x$, we can
 \begin{enumerate}
-    \item compute the distances $d_1(x), \dots, d_C(x)$ between $x$ and the barycenters $m_1, \dots, m_C$ of all the classes
-    \item assign to $x$ the class with the closes barycenter
+    \item Compute the barycenters $m_1, \dots, m_C$ of all the classes using the labelled samples,
+    \item compute the distances $d_1(x), \dots, d_C(x)$ between $x$ and the barycenters $m_1, \dots, m_C$ of all the classes,
+    \item assign to $x$ the class with the closest barycenter.
 \end{enumerate}
 
 This results in a linear partitioning of the solution space, as the resulting decision boundaries will be linear.
@@ -1182,41 +1183,44 @@ We can
 \end{itemize}
 
 \section{Bayesian classification}
-Bayesian classification is a general concept, and can be divided into different categories
+Bayesian classification is a general concept, and can be divided into different categories:
 \begin{itemize}
     \item full problem parametrization: the posterior probability are known exactly
     \begin{itemize}
-        \item Minimum risk (MR) criterion, Maximum a posteriori (MAP) criterion and Maximum likelihood (ML) criterion
+        \item Minimum risk (MR) criterion,
+        \item Maximum a posteriori (MAP) criterion, and
+        \item Maximum likelihood (ML) criterion.
     \end{itemize}
     \item incomplete problem parametrization:
     \begin{itemize}
-        \item Minimax criterion
-        \item Neyman-Pearson criterion
+        \item Minimax criterion and
+        \item Neyman-Pearson criterion.
     \end{itemize}
 \end{itemize}
 
 \subsection{Maximum a posteriori criterion}
-The MAP criterion is used in most of the cases.
+The MAP criterion is the most commonly used one.
 
-If we didn't have the class-conditional pdfs, the decision criterion minimizing the error would be
+In the case where the class-conditional pdfs are not available, the decision criterion minimizing the error would be
 $$ \widehat \omega = \argmax_{\omega_i} \{ \P(\omega_i) \}$$
 i.e. we would be always choosing the class with the highest prior.
-The error probability would then be $1 - \max_i \{ \P(\omega_i) \}$.
+The error probability would then be
+$$ P_\text{err} = 1 - \max_i \{ \P(\omega_i) \} $$
 
-Assume that the posteriori probabilities $\P(\omega_i | \bm x)$ are known.
+Now, assume that the posterior probabilities $\P(\omega_i | \bm x)$ are known.
 Since
-$$ \P(\omega_i | \bm x) = \frac{\pdf(\bm x | \omega_i) \P(\omega_i)}{\P(\bm x)} $$
+$$ \P(\omega_i | \bm x) = \frac{\pdf(\bm x | \omega_i) \P(\omega_i)}{\pdf(\bm x)} $$
 
-this can be reformulated as
+where
 \begin{itemize}
     \item the class-conditional pdf $\pdf(\bm x | \omega_i), i = 1, \dots, C$ are known, and
-    \item the priors $\P(\omega_i), i = 1, \dots, C$ are known
+    \item the priors $\P(\omega_i), i = 1, \dots, C$ are known.
 \end{itemize}
 
-Then the decision criterion minimizing the error is the one that maximized the a posteriori probability
-$$ \widehat \omega = \argmax_{\omega_i} \{ \P(\omega_i | \bm x) \} = \argmax_{\omega_i} \left\{ \frac{\pdf(\bm x | \omega_i) \P(\omega_i)}{\P(\bm x)} \right\} $$
+Then, the decision criterion that minimizes the error is the one that maximizes the posterior probability
+$$ \widehat \omega = \argmax_{\omega_i} \{ \P(\omega_i | \bm x) \} = \argmax_{\omega_i} \left\{ \frac{\pdf(\bm x | \omega_i) \P(\omega_i)}{\pdf(\bm x)} \right\} $$
 
-Since $\P(\bm x)$ does not depend $\omega_i$, we can remove $\P(\bm x)$ from the above expression, obtaining the formulation of the MAP criterion
+Since $\pdf(\bm x)$ does not depend on $\omega_i$, we can remove $\P(\bm x)$ from the above expression, obtaining the formulation of the MAP criterion
 $$ \widehat \omega = \argmax_{\omega_i} \{ \pdf(\bm x | \omega_i) \P(\omega_i) \} $$
 This allows to find a threshold $T$ to use for the decision.
 
@@ -1225,37 +1229,38 @@ The error probability obtained with the MAP criterion is, in the case where the 
     P_\text{err}
     &= \P(\text{err} | \omega_1) \P(\omega_1) + \P(\text{err} | \omega_2) \P(\omega_2) \\
     &= \int_T^{+\infty} \pdf(x | \omega_1) \P(\omega_1) \dd x + \int_{-\infty}^T \pdf(x | \omega_2) \P(\omega_2) \dd x \\
+    &= \int_T^{+\infty} \P(\omega_1 | x) \pdf(x) \dd x + \int_{-\infty}^T \P(\omega_2 | x) \pdf(x) \dd x & \text{for Bayes' theorem}
 \end{align*}
 
 We can also express the error as an expectation
 \begin{align*}
     P_\text{err}
     &= \E{\P(\text{err} | x)} \\
-    &= \int_{-\infty}^{+\infty} \pdf(\text{err} | x) \pdf(x) \dd x \\
-    &= \int_T^{+\infty} \pdf(\text{err} | x) \pdf(x) \dd x + \int_{-\infty}^T \pdf(\text{err} | x) \pdf(x) \dd x
+    &= \int_{-\infty}^{+\infty} \P(\text{err} | x) \pdf(x) \dd x \\
+    &= \int_T^{+\infty} \P(\text{err} | x) \pdf(x) \dd x + \int_{-\infty}^T \P(\text{err} | x) \pdf(x) \dd x
 \end{align*}
 
 If we compare this expression with the one found above, we can conclude that
 $$ \P(\text{err} | x) = \begin{dcases}
-    \pdf(\omega_1 | x) & x \geq T \\
-    \pdf(\omega_2 | x) & x < T
+    \P(\omega_1 | x) & \text{if } x \geq T \\
+    \P(\omega_2 | x) & \text{if } x < T
 \end{dcases} $$
 
 Then, the minimum $P_\text{err}$ will be
-$$ P_\text{err, min} = \int_{-\infty}^{+\infty} \min\left\{ \P(\omega_1 | x) \P(\omega_2 | x) \right\} \pdf(x) \dd x $$
+$$ P_\text{err, min} = \int_{-\infty}^{+\infty} \min\left\{ \P(\omega_1 | x), \P(\omega_2 | x) \right\} \pdf(x) \dd x $$
 
 
-\subsubsection{Maximum likelihood criterion}
+\subsection{Maximum likelihood criterion}
 The ML criterion is a particular case of the MAP criterion, where the priors are equal (or unknown and assumed to be equal).
-In this the value of $\P(\omega_i)$ is always the same for all the classes and does not contribute to the decision.
+Thus the priors $\P(\omega_i), i = 1, \dots, C$ are all equal and do not contribute to the decision.
 The ML criterion becomes
 $$ \widehat \omega = \argmax_{\omega_i} \{ \pdf(\bm x | \omega_i) \} $$
 
-\subsubsection{Minimum risk criterion}
+\subsection{Minimum risk criterion}
 Sometimes, even though a class is less-likely to occur (i.e. has a low prior), mis-detecting it can lead to a great cost.
 
-We can formalize the concept of cost using the cost matrix $\Lambda$.
-The $(i,j)$-the element $\lambda_{i,j}$ of the cost matrix is the cost incurred for taking action $\alpha_i$ for the class $\omega_j$
+We can formalize this using the concept of cost matrix.
+The $(i,j)$-the element $\lambda_{i,j}$ of the cost matrix $\Lambda$ is the cost incurred for taking action $\alpha_i$ for the class $\omega_j$
 
 For example, given the classes $\omega_1 \equiv$ ``fire'' and $\omega_2 \equiv$ ``no fire'', and the actions $\alpha_1 \equiv$ ``call the firemen'' and $\alpha_2 \equiv$ ``don't call the fireman'', the cost matrix could look like follows
 $$ \Lambda = \begin{pmatrix}
@@ -1263,13 +1268,13 @@ $$ \Lambda = \begin{pmatrix}
     1000000 & 0
 \end{pmatrix} $$
 
-Meaning that the cost of calling the firemen when there is no fire is not 0, but the cost of not calling the firemen where there is afire is much higher.
+Meaning that the cost of calling the firemen when there is no fire is not 0, but the cost of not calling the firemen where there is a fire is much higher.
 
-Let the conditional risk (or expected loss) of taking an action $\alpha_i$ be
+Let the conditional risk $R(\alpha_i | x)$ (or expected loss) of taking an action $\alpha_i$ given the sample $x$ be
 $$ R(\alpha_i | x) = \sum_{j = 1}^C \lambda(\alpha_i | x) \P(\omega_j | x) $$
 
-If we decide the action to perform as the one minimizing the cost for a given sample $x$, then the overall risk $R^*$ is given by
-$$ R^* = \int_{-\infty}^{+\infty} \min_i \left\{ R(\alpha_i | x) p (x) \right\} \dd x $$
+If the action minimizing the cost is always chosen, then the overall risk $R^*$ is given by
+$$ R^* = \int_{-\infty}^{+\infty} \min_i\{R(\alpha_i | x)\} \pdf(x) \dd x $$
 and is called Bayes risk.
 
 Let's consider the case where $x$ is scalar and $C = 2$.
@@ -1307,7 +1312,7 @@ Moreover,
 \end{itemize}
 
 
-\subsubsection{Discriminant functions}
+\subsection{Discriminant functions}
 The sample $\bm x$ is assigned to the class $\widehat \omega$ such that
 $$ \widehat \omega = \argmax_{\omega_i} \{ g_{\omega_i}(\bm x) \} $$
 where $g_{\omega_1}, \dots, g_{\omega_C}$ are the so-called discriminant functions.
@@ -1434,8 +1439,7 @@ To shorten the notation, we often use $P_0 = \P(H_0)$ and $P_1 = \P(H_1)$.
 
 The choice should be performed based on $n$ features $\bm x$.
 Let $Z_0$ and $Z_1$ be the decision regions of $H_0$ and $H_1$.
-
-The class conditional pdfs are assumed to be known.
+The class conditional pdfs $\pdf(\bm x | \omega_1)$ and $\pdf(\bm x | \omega_2)$ are assumed to be known.
 
 \subsection{Minimum risk criterion}
 Let $D_0$ and $D_1$ be the decisions for ``target absent'' and ``target present'', respectively.
@@ -1482,10 +1486,9 @@ When discussing the Minimum risk criterion previously, we started from a point t
 
 
 \subsection{Minimax criterion}
-The MR criterion is the optimal decision criterion given that the priors and the class-conditional pdfs are known.
-However, sometimes the information about the priors are not known.
-
-In this case we can instead reason in terms of worst case scenarios, i.e. we behave as if the priors assumed the probability values that lead to the maximum minimum risk.
+The MR criterion is the optimal decision criterion when the priors and the class-conditional pdfs are known.
+But what if the priors are not known?
+In this case we can reason in terms of worst case scenarios, i.e. we behave as if the priors assumed the probability values that lead to the maximum minimum risk.
 
 Let's consider the case where the priors $P_1$ and $P_0$ corresponding to ``target present'' and ``target not present'' are not known.
 We can express the threshold $\eta$ used in the MR criterion as a function of $P_1$, also remembering that $P_0 = 1 - P_1$ as follows
@@ -1512,7 +1515,7 @@ Which is generally a quadratic function of $P_1$.
 However, computation of $P_F(P_1)$ and $P_M(P_1)$ for all the possible $P_1$ values is computationally demanding, as they require the evaluation of the integral of the class-conditional probabilities.
 Thus, computing $R(P_1)$ exactly is not feasible.
 
-Instead, we can set $P_F(P_1)$ and $P_M(P_1)$ at some value $P_F^*$ and $P_M^*$ respectively, compute for a single, arbitrary value $P_1^*$ as
+Instead, we can compute $P_F(P_1)$ and $P_M(P_1)$ for a single, arbitrary value $P_1^*$ as
 $$ P_F^* = P_F(P_1^*) \qquad P_M^* = P_M(P_1^*) $$
 
 Now, if $P_F^*$ and $P_M^*$ are plugged in the risk computation in place of  $P_F(P_1)$ and $P_M(P_1)$, the risk $R^*(P_1)$ is obtained
@@ -1652,12 +1655,12 @@ It can be shown that:
 
 
 
-\subsection{Classifier fusion}
+\section{Classifier fusion}
 Different classifiers might be best in different parts of the feature space.
 Thus is might be convenient to perform classifier fusion, where two or more classifiers are combined in parallel and their output combined.
 
 
-\subsubsection{Classifier combination}
+\subsection{Classifier combination}
 Typical combination scenario are the following 3.
 
 \paragraph{Traditional classification}
@@ -1687,7 +1690,7 @@ Attacking the problem with a higher number of classifiers has the advantage of i
 However, it also decomposes the global classification problem into a more local one, and thus could lead to lower accuracy, do to some missed correlations.
 
 
-\subsubsection{Fusion architectures}
+\subsection{Fusion architectures}
 The fusion architecture can be
 \begin{itemize}
     \item Parallel architecture: the classifiers are all run in parallel and their outputs combined by means of an appropriate fusion strategy
@@ -1700,7 +1703,7 @@ The fusion architecture can be
 \end{itemize}
 
 
-\subsubsection{Fusion strategies for parallel classifier fusion}
+\subsection{Fusion strategies for parallel classifier fusion}
 The most important part of a parallel classifier fusion is choosing how to combine the outputs of different classifiers, also referred to fusion strategy.
 
 There are three main categories of classifiers fusion
@@ -1785,7 +1788,7 @@ $$ \underline{a_j} = \left( \underline{\underline{P_j}}^T \underline{\underline{
 
 
 
-\subsection{Contextual classification with Markov Random Fields}
+\section{Contextual classification with Markov Random Fields}
 Until now we assumed that the decision for a given sample does not depend on its context.
 How can we include the context information in the decision process?
 \begin{itemize}
@@ -1931,7 +1934,8 @@ However, it is very computationally demanding and requires the tuning of the $\b
 
 
 \clearpage
-\section{Artificial neural networks}
+\chapter{Artificial Neural Networks}
+\section{Introduction}
 Artificial neural networks (ANN) are non-linear systems that mimic the structure of the biological neural networks.
 Compared to traditional computers (based on the Von Neumann architecture) they are
 \begin{itemize}
@@ -1946,10 +1950,6 @@ The development of a ANN usually consists in
     \item a prediction phase
 \end{enumerate}
 
-
-\clearpage
-\chapter{Artificial Neural Networks}
-\section{Introduction}
 The artificial neuron is the elementary unit of ANN architectures.
 It has a single output $y$ determined on the basis of a number of $N$ inputs $\bm x \in \mathbb R^N$ as follows
 $$ y = f\left( \sum_{i = 1}^N w_i x_i + \text{bias} \right) $$
