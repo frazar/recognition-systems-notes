@@ -1474,7 +1474,7 @@ The average cost is given by
     &= \E{\text{cost}} \\
     &= c_{00} \P(D_0, H_0) + c_{10} \P(D_1, H_0) + c_{01} \P(D_0, H_1) + c_{11} \P(D_1, H_1) \\
     &= c_{00} \P(D_0 | H_0) \P(H_0) + c_{10} \P(D_1 | H_0) \P(H_0) \\
-    &\quad + c_{01} \P(D_0 | H_1) \P(H_1) + c_{11} \P(D_1 | H_1) \P(H_1) & \text{for the definition of conditioned probability} \\
+    &\quad + c_{01} \P(D_0 | H_1) \P(H_1) + c_{11} \P(D_1 | H_1) \P(H_1) & \text{for the definition of conditional probability} \\
     &= c_{00} P_\text{CR} P_0 + c_{10} P_\text{FA} P_0 + c_{01} P_\text{MD} P_1 + c_{11} P_\text{D} P_1 \\
     &= c_{00} (1 - P_\text{FA}) P_0 + c_{10} P_\text{FA} P_0 + c_{01} (1 - P_\text{D}) P_1 + c_{11} P_\text{D} P_1 \\
     &= \underbrace{c_{00} P_0 + c_{01} P_1}_\text{constants w.r.t. $Z_1$} - c_{00} P_\text{FA} P_0 + c_{10} P_\text{FA} P_0 - c_{01} P_\text{D} P_1 + c_{11} P_\text{D} P_1 \\
@@ -1709,7 +1709,7 @@ The fusion architecture can be
 \end{itemize}
 
 
-\subsection{Fusion strategies for parallel classifier fusion}
+\subsection{Fusion strategies for parallel architecture}
 The most important part of a parallel classifier fusion is choosing how to combine the outputs of different classifiers, also referred to fusion strategy.
 
 There are three main categories of classifiers fusion
@@ -1739,7 +1739,7 @@ $$ \lim_{Q \to +\infty} P = \begin{dcases}
 
 \paragraph{Averaging}
 The posterior probabilities are seen as estimates of the posterior probabilities.
-The decision rule is the based on the MAP criterion applied on the averaged posteriors.
+The decision rule is based on the MAP criterion applied on the averaged posteriors.
 
 In practical terms, we decide for the class that maximises the average confidence of all the classifiers
 $$ \widehat w = \argmax_{k = 1,\dots,C} \left\{ \sum_{j = 1}^Q P_j(\omega_k | \bm x) \right\} $$
@@ -1802,30 +1802,31 @@ How can we include the context information in the decision process?
     \item At the decision level: with Markov Random Fields
 \end{itemize}
 
-Let $\Omega = \{\omega_1, \dots, \omega_c\}$ be the classes that can be assigned to each of the pixels of a given image $I$ of size $K \times J$.
+Let $\Omega = \{\omega_i, i = 1, \dots, c\}$ be the classes that can be assigned to each of the pixels of a given image $I$ of size $K \times J$.
 Let $\bm C$ be the set of all the possible classification maps, thus $\text{card}\{\bm C\} = c^{K J}$.
 Let $C_i$ be any the possible classification maps in $\bm C$.
 
+Suppose we want to assign a class to each of the pixels of an image $I$.
 The MAP decision rule for the whole image is
 $$ \widehat C = \argmax_{C_i \in \bm C}\{\P(C_i | I)\} = \argmax_{C_i \in \bm C}\{\pdf(I | C_i) \P(C_i) \} $$
 But $\pdf(I | C_i)$ and $\P(C_i)$ are hard to compute.
-We'll introduce to assumptions that will simplify the mathematical formulation:
+We'll introduce two assumptions that will simplify the mathematical formulation:
 \begin{itemize}
-    \item the spacial contextual information will be modelled locally
+    \item the spatial contextual information will be modelled locally
     \item class-conditional independence: i.e. the class-conditional distribution of each pixel is independent of other pixels, and thus the map-conditional distribution of the whole image can be computed as a product of the class-conditional distribution of each pixel.
-    $$ \pdf(I | C_i) = \prod_{I(k, j) \in I} \pdf(I(k, j) | C_i(k, j)) $$
+    $$ \pdf(I | C_i) = \prod_{I(j, k) \in I} \pdf(I(j, k) | C_i(j, k)) $$
 \end{itemize}
 
 A random field is a collection of random variables indexed in a particular topological space (in our case, a 2D grid).
-A Markov Random Field (MRF) is a random field with respect to a given neighbourhood system $N$, if the related probability function satisfies the following properties:
+A random field is said to be a Markov Random Field (MRF) with respect to a given neighbourhood system $N$, if the related probability function satisfies the following properties:
 \begin{itemize}
     \item positivity:
     $$ P(C_i) > 0 \quad \forall C_i \in C $$
     meaning that every possible map is associated to a non-zero probability.
 
     \item Markov property: the class distribution of a specific pixel is independent from the classes of the pixels that do not belong to its neighbourhood
-    $$ P(C_i(k, j) | \{ C_i(g, h), \forall (g, h) \neq (k, j) \}) =
-    P(C_i(k, j) | \{ C_i(g, h), \forall (g, h) \in N(k, j) \}) $$
+    $$ P\Big(C_i(j, k) \Big| \big\{ C_i(g, h), \forall (g, h) \neq (j, k) \big\}\Big) =
+    P\Big(C_i(j, k) \Big| \big\{ C_i(g, h), \forall (g, h) \in N(j, k) \big\}\Big) $$
 
     \item Homogeneity or spatial stationarity: the class distribution of all the pixels, conditioned to the classes of their neighbour pixels, follow the same distribution.
 \end{itemize}
@@ -1852,16 +1853,16 @@ The Hammersley-Clifford theorem states that, given a neighbourhood system $N$, $
 Thus, if a random field is a MRF with respect to $N$, it is possible to define a global model from the local characteristics of the image (which contains most of the spatial correlation) by means of the Gibbs distribution.
 
 If a random field is a MRF with respect to $N$, then
-$$ \P\Big(C_i(k, j) \Big| \big\{ C_i(g, h), \forall (g, h) \neq (k, j) \big\} \Big) = \frac{1}{Z} \exp(-U \left( C_i(k, j) \Big| \big\{ C_i(g, h), \forall (g, h) \in N(k, j) \big\} \right)) $$
+$$ \P\Big(C_i(j, k) \Big| \big\{ C_i(g, h), \forall (g, h) \neq (j, k) \big\} \Big) = \frac{1}{Z} \exp(-U \left( C_i(j, k) \Big| \big\{ C_i(g, h), \forall (g, h) \in N(j, k) \big\} \right)) $$
 
 A simple formulation of the energy function in the Gibbs distribution is as follows
-$$ U \left( C_i(k, j) \Big| \big\{ C_i(g, h), \forall (g, h) \in N(k, j) \big\} \right) = -\beta \sum_{(g,h) \in N(k, j)} \delta \big(C_i(k, j), C_i(g, h) \big) $$
+$$ U \left( C_i(j, k) \Big| \big\{ C_i(g, h), \forall (g, h) \in N(j, k) \big\} \right) = -\beta \sum_{(g,h) \in N(j, k)} \delta \big(C_i(j, k), C_i(g, h) \big) $$
 where
 \begin{itemize}
     \item $\delta(\cdot)$ is the Kronecher function
-    $$ \delta \big(C_i(k, j), C_i(g, h) \big) = \begin{cases}
-        1 & \text{if } C_i(k, j) = C_i(g, h) \\
-        0 & \text{if } C_l(k, j) \neq C_l(g, h)
+    $$ \delta \big(C_i(j, k), C_i(g, h) \big) = \begin{cases}
+        1 & \text{if } C_i(j, k) = C_i(g, h) \\
+        0 & \text{if } C_l(j, k) \neq C_l(g, h)
     \end{cases} $$
     \item $\beta$ is a user-defined parameter that controls the influence of the spatial contextual information. Larger $\beta$ values lead to more homogeneous maps.
 \end{itemize}
@@ -1872,20 +1873,20 @@ $$ \widehat C = \argmax_{C_i \in \bm C} \big\{ \pdf(I, C_i) \P(C_i)  \big\} $$
 In fact, for the class-conditional independence property we have that
 \begin{align*}
     \pdf(I | C_i)
-    &= \prod_{(g, h)} \pdf(I(g, h) | C_i(g, h)) \\
-    &= \prod_{(g, h)} \exp(\ln \big[ \pdf(I(g, h) | C_i(g, h)) \big] )
+    &= \prod_{(j, k)} \pdf(I(j, k) | C_i(j, k)) \\
+    &= \prod_{(j, k)} \exp(\ln \big[ \pdf(I(j, k) | C_i(j, k)) \big] )
 \end{align*}
 
 Moreover, the global prior $\P(C_i)$ is given by
 \begin{align*}
     \P(C_i)
     &= \P(C(1, 1), C_{\text{without } (1, 1)}) \\
-    &= \P(C(1, 1) | C_{\text{without } (1, 1)}) \P(C_{\text{without } (1, 1)}) & \text{for Bayes' theorem} \\
+    &= \P(C(1, 1) | C_{\text{without } (1, 1)}) \P(C_{\text{without } (1, 1)}) & \text{for the definition of conditional probability} \\
     &= \P(C(1, 1) | C_{N(1, 1)}) \P(C_{\text{without } (1, 1)}) & \text{for the Markov property} \\
     &= \P(C(1, 1) | C_{N(1, 1)}) \P(C(1, 2), C_{\text{without } (1, 1), (1, 2)}) \\
     &= \dots \\
-    &= \prod_{(g, h)} \P(C(g, h) | C_{N(g, h)}) \\
-    &= \prod_{(g, h)} \frac{1}{Z} \exp(-U \left( C_i(k, j) \Big| \big\{ C_i(g, h), \forall (g, h) \in N(k, j) \big\} \right)) & \text{Applying the HC theorem}
+    &= \prod_{(j, k)} \P(C(j, k) | C_{N(j, k)}) \\
+    &= \prod_{(j, k)} \frac{1}{Z} \exp(-U \left( C_i(j, k) \Big| \big\{ C_i(j, k), \forall (j, k) \in N(j, k) \big\} \right)) & \text{Applying the HC theorem}
 \end{align*}
 
 Now that both the class-conditional probability $\pdf(I | C_i)$ and the global prior $\P(C_i)$ have been computed, the MAP criterion becomes
@@ -1894,27 +1895,27 @@ Now that both the class-conditional probability $\pdf(I | C_i)$ and the global p
     &= \argmax_{C_i \in \bm C}\{ \pdf(I, C_i) \P(C_i) \} \\
     &= \argmax_{C_i \in \bm C}
     \left\{
-        \prod_{(g, h)} \exp(\ln \big[ \pdf(I(g, h) | C_i(g, h)) \big] )
-        \prod_{(g, h)} \frac{1}{Z} \exp(-U \left( C_i(k, j) \Big| \big\{ C_i(g, h), \forall (g, h) \in N(k, j) \big\} \right))
+        \left( \prod_{(j, k)} \exp\left[\ln(\pdf(I(j, k) \Big| C_i(j, k)))\right] \right)
+        \left( \prod_{(j, k)} \frac{1}{Z} \exp\left[-U \left( C_i(j, k) \Big| \big\{ C_i(j, k), \forall (g, h) \in N(j, k) \big\} \right)\right] \right)
     \right\} \\
     &= \argmax_{C_i \in \bm C}
     \left\{
     \frac{1}{Z}
     \exp(
-        \sum_{(g, h)} \left[
-            \ln \big( \pdf(I(g, h) | C_i(g, h)) \big)
-            -U \left( C_i(k, j) \Big| \big\{ C_i(g, h), \forall (g, h) \in N(k, j) \big\} \right)
+        \sum_{(j, k)} \left[
+            \ln(\pdf(I(j, k) \Big| C_i(j, k)))
+            -U \left( C_i(j, k) \Big| \big\{ C_i(g, h), \forall (g, h) \in N(j, k) \big\} \right)
         \right]
     )
     \right\} \\
     &= \argmin_{C_i \in \bm C}
-    \Bigg\{
-        \sum_{(g, h)} \Big[
-            \underbrace{\ln \big( \pdf(I(g, h) | C_i(g, h)) \big)}_{U_\text{data}}
+    \Biggl\{
+        \sum_{(g, h)} \Bigg[
+            \underbrace{\ln(\pdf(I(j, k) \Big| C_i(j, k)))}_{U_\text{data}}
             -
-            \underbrace{U \left( C_i(k, j) \Big| \big\{ C_i(g, h), \forall (g, h) \in N(k, j) \big\} \right)}_{U_\text{context}}
-        \Big]
-    \Bigg\}
+            \underbrace{U \left( C_i(j, k) \Big| \big\{ C_i(g, h), \forall (g, h) \in N(j, k) \big\} \right)}_{U_\text{context}}
+        \Bigg]
+    \Biggr\}
 \end{align*}
 
 Thus minimizing the energy is equivalent to maximizing the posterior probability.
