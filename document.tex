@@ -57,7 +57,9 @@
 
     {
         \bfseries
-        Spring 2018
+        Academic year - 2018/19
+
+        Spring semester
     }
 \end{titlepage}
 
@@ -104,7 +106,7 @@ Recognition can also be seen as a a partitioning of the feature space into subse
 \begin{enumerate}
     \item Acquisition: choice of number of sensors, sensitivity, sampling frequency
     \item Pre-processing: calibration of the sensors, noise removal
-    \item Feature extraction: choice of the features that have the highest discrimination power, are the least computationally demanding to compute, are the least sensitive to transformation of the input (i.e. rotations, translations, ecc)
+    \item Feature extraction: choice of the features that have the highest discrimination power, are the least computationally demanding to compute, are the least sensitive to transformation of the input (i.e. rotations, translations, etc)
     \item Classification: choice of the architecture depending on the number of features, amount and typology of noise, prior knowledge
     \item Post-processing: remove easily-spottable classification errors, move the classifier output to a more readable format
     \item Decision
@@ -236,7 +238,6 @@ Since $\norm{\bm e}^2$ is convex, the $\bm{\widehat \alpha}$ that minimizes it t
 $$ \pdv{e}{\bm{\widehat \alpha}} = 0 $$
 
 Indicating with $\alpha_i$ and $e_i$ the $i$-th element of $\bm \alpha$ and $\bm e$ respectively, then
-
 \begin{align*}
     \pdv{\norm{e}^2}{\alpha_i}
     &= \pdv{}{\alpha_i} \sum_{i = 1}^N e_i^2 \\
@@ -426,7 +427,6 @@ Example:
 In the case of a gaussian distributed pdf, $\bm \theta = (\mu, \sigma)$.
 
 The likelihood function is then
-
 \begin{align*}
     \pdf(\bm X| \bm \theta)
     &= \prod_{k = 1}^M \pdf(X_k | \bm \theta) \\
@@ -619,7 +619,6 @@ Disregarding $\pdf(X)$, and assuming that $\mu$ follows a Gaussian distribution 
 \end{align*}
 
 The product of two gaussian functions is yet another gaussian, so we expect that
-
 \begin{align*}
 \pdf(\mu | X)
 &\propto \frac{1}{\sqrt{2 \pi \sigma_N^2}} \exp( - \frac{(x_k - \mu_N)^2}{2 \sigma_N^2}) \\
@@ -716,7 +715,7 @@ Typical choice of kernels are:
     \item rectangle function
     \item triangle function
     \item exponential function (spiky gaussian)
-    \item cauchy function
+    \item Cauchy function
     \item sinc squared function
 \end{itemize}
 
@@ -732,12 +731,11 @@ $$
 
 Here, the $x$ parameter is fixed, while $x_k$ are $N$ stochastic variables.
 Assuming that $x_k, k = 1, \dots, N$ are i.i.d. and distributed as $y$, then
-
 \begin{align*}
-\E{\widehat \pdf(x)}
-&= \frac{1}{N V} N \E{\gamma \left( \frac{y - x}{h} \right)} \\
-&= \frac{1}{V} \E{\gamma \left( \frac{y - x}{h} \right)} \\
-&= \frac{1}{V} \int_{-\infty}^{+\infty} \gamma \left( \frac{y - x}{h} \right) \pdf(y) \dd y
+    \E{\widehat \pdf(x)}
+    &= \frac{1}{N V} N \E{\gamma \left( \frac{y - x}{h} \right)} \\
+    &= \frac{1}{V} \E{\gamma \left( \frac{y - x}{h} \right)} \\
+    &= \frac{1}{V} \int_{-\infty}^{+\infty} \gamma \left( \frac{y - x}{h} \right) \pdf(y) \dd y
 \end{align*}
 
 Note that the integral represents the convolution operation.
@@ -1016,22 +1014,22 @@ The number of combinations to be tested is given by
 $$ \begin{pmatrix} n \\ m \end{pmatrix} = \frac{n!}{m! (n - m)!} $$
 
 \subsubsection{Sequential Forward Selection}
-It is a suboptimal strategy, i.e. it is not guaranteed to give the optimal solution.
+It is a sub-optimal strategy, i.e. it is not guaranteed to give the optimal solution.
 It follows a bottom-up strategy.
 At every iteration, a new feature is added to the set of chosen features.
 The feature to be added at each iteration is chosen as the one that most increases the separability measure of the selected features.
 
-It is suboptimal as it is subject to the so-called \emph{nesting effect}, i.e. a feature selected in the previous iteration can not be removed any more, even if the choice was not optimal.
+It is sub-optimal as it is subject to the so-called \emph{nesting effect}, i.e. a feature selected in the previous iteration can not be removed any more, even if the choice was not optimal.
 
 \subsubsection{Sequential Backward Selection}
-It is a suboptimal strategy, similarly to SFS.
+It is a sub-optimal strategy, similarly to SS.
 It follows a top-down strategy.
 
 Initially all the features are considered.
 At every iteration, one of the considered feature is discarded.
 To feature to be removed is chosen as the one that least decreases the separability measure of the selected features.
 
-It is suboptimal as it is subject to the so-called \emph{nesting effect}.
+It is sub-optimal as it is subject to the so-called \emph{nesting effect}.
 
 \subsubsection{Branch and Bound}
 It is an optimal strategy, given that the separability criterion used is monotonically increasing with respect to the number of considered features.
@@ -1795,6 +1793,7 @@ $$ \underline{a_j} = \left( \underline{\underline{P_j}}^T \underline{\underline{
 
 
 \section{Contextual classification with Markov Random Fields}
+\subsection{Introduction}
 Until now we assumed that the decision for a given sample does not depend on its context.
 How can we include the context information in the decision process?
 \begin{itemize}
@@ -1817,6 +1816,7 @@ We'll introduce two assumptions that will simplify the mathematical formulation:
     $$ \pdf(I | C_i) = \prod_{I(j, k) \in I} \pdf(I(j, k) | C_i(j, k)) $$
 \end{itemize}
 
+\subsection{Markov Random Fields and Energy}
 A random field is a collection of random variables indexed in a particular topological space (in our case, a 2D grid).
 A random field is said to be a Markov Random Field (MRF) with respect to a given neighbourhood system $N$, if the related probability function satisfies the following properties:
 \begin{itemize}
@@ -1867,6 +1867,7 @@ where
     \item $\beta$ is a user-defined parameter that controls the influence of the spatial contextual information. Larger $\beta$ values lead to more homogeneous maps.
 \end{itemize}
 
+\subsection{Final formulation}
 We can now rewrite the MAP criterion
 $$ \widehat C = \argmax_{C_i \in \bm C} \big\{ \pdf(I, C_i) \P(C_i)  \big\} $$
 
@@ -1921,6 +1922,8 @@ Now that both the class-conditional probability $\pdf(I | C_i)$ and the global p
 Thus minimizing the energy is equivalent to maximizing the posterior probability.
 However, it is often not possible to find an analytical solution to the energy minimization problem, as it is highly non-linear.
 
+
+\subsection{Training algorithms}
 The three most popular optimization algorithms employed for minimizing the energy are
 \begin{itemize}
     \item Simulated Annealing (SA),
@@ -1944,19 +1947,20 @@ However, it is very computationally demanding and requires the tuning of the $\b
 \chapter{Artificial Neural Networks}
 \section{Introduction}
 Artificial neural networks (ANN) are non-linear systems that mimic the structure of the biological neural networks.
-Compared to traditional computers (based on the Von Neumann architecture) they are
+Compared to traditional computers (based on the Von Neumann architecture), ANN
 \begin{itemize}
-    \item composed of simpler elements, in very high number
-    \item integrate the memory by distributing it in the single elements
-    \item operate the processing in a distributed and parallel way
+    \item are composed of simpler elements, but in very high number,
+    \item integrate the memory by distributing it in the single elements, and
+    \item operate the processing in a distributed and parallel way.
 \end{itemize}
 
 The development of a ANN usually consists in
 \begin{enumerate}
     \item a training phase, and
-    \item a prediction phase
+    \item a prediction phase.
 \end{enumerate}
 
+\section{Artificial neurons}
 The artificial neuron is the elementary unit of ANN architectures.
 It has a single output $y$ determined on the basis of a number of $N$ inputs $\bm x \in \mathbb R^N$ as follows
 $$ y = f\left( \sum_{i = 1}^N w_i x_i + \text{bias} \right) $$
@@ -1968,7 +1972,7 @@ where
     Common choices of activation functions are
     \begin{itemize}
         \item linear functional, $f(x) = x$
-        \item piecewise linear functional, where
+        \item piece-wise linear functional, where
         $$ f(x) = \begin{cases}
             1 & \text{if } x > \theta \\
             -1 & \text{if } x < -\theta \\
@@ -1983,20 +1987,17 @@ where
 
 In an ANN architecture, many neurons are connected.
 
-
-\subsection{Perceptron}
-It is an artificial neuron that uses the threshold activation function.
-
-Not all the gates can be implemented with a single perceptron, in particular non-linear ones (e.g. a XOR gate).
+A \textbf{perceptron} is an artificial neuron that uses the threshold activation function.
+Not all the traditional logical gates can be implemented with a single perceptron, in particular non-linear ones (e.g. the XOR gate).
 
 
-\subsection{Multi-layer perceptron}
+\section{Multi-layer perceptron}
 The forward interconnection of several layers of perceptrons leads to an architecture, which takes the name of multilayer perceptron (MLP).
-A MLP has, at least, one input and output layer, and zero or more hidden layers.
+A MLP has at least one input and one output layer, and an arbitrary number of hidden layers.
 The neurons between a layer and the successive one are always fully connected.
 
 MLP can be used as universal approximators, meaning that, given a high enough number of elements, an MLP can approximate any function.
-This is useful in classification problems, where they can model non-linear discriminant functions.
+This is useful in classification problems, where MLP are used to model non-linear discriminant functions.
 
 To train an MLP network we make use of the back-propagation algorithm.
 It is a gradient descent method which allows finding a (local) minimum of the sum of squared error $E$, given by
@@ -2069,7 +2070,7 @@ Advantages of MLP:
 On the other hand, they are computationally very demanding to train.
 
 
-\subsection{Radial basis function neural networks}
+\section{Radial basis function neural networks}
 A RBF is a function that only depends on the distance between an input vector $\bm x$ and a prototypical vector $\bm x_c$.
 $$ \Phi(\norm{\bm x - \bm x_c}) $$
 Often, the distance metric used is the euclidean distance.
@@ -2080,7 +2081,7 @@ Common RBF used are the following
     \item linear
     \item multiquadratic
     \item cubic
-    \item inverse multiquadratic
+    \item inverse multi-quadratic
     \item thin plate spline
 \end{itemize}
 
@@ -2095,13 +2096,13 @@ $$ y_i = F_i(\bm x) = \sum_{m = 1}^M w_{m, i} \Phi(\norm{\bm x - \bm x_{c,m}}) +
 
 Note that only the connections between the hidden and output layers are weighted.
 
-A popular technique for RBF NN training of the hidden layer's weights is the unsupervised clustering using the k-means algorithm.
+A popular technique for RBF NN training of the hidden layer's weights is unsupervised clustering using the k-means algorithm.
 The algorithm must be configured with a number $k$ of expected classes (in this case, $k = M$, referring to the previous expressions for $y_i$).
 
 The algorithm's steps are the following
 \begin{enumerate}
-    \item Randomly choose $k$ samples as initial guesss for the baricenters, each related to a different cluster
-    \item Assign each of the remaining samples to the cluster whose baricenter is closest
+    \item Randomly choose $k$ samples as initial guesses for the barycenters, each related to a different cluster
+    \item Assign each of the remaining samples to the cluster whose barycenter is closest
     \item Update the barycenters of the clusters as the average of the positions of each sample
     \item Go back to step 2
 \end{enumerate}
@@ -2124,8 +2125,8 @@ On the other hand
 \end{itemize}
 
 
-\subsection{Probabilistic Neural Networks}
-PNNs are feedforward network, based on local basis function.
+\section{Probabilistic Neural Networks}
+PNNs are feed-forward network, based on local basis function.
 They allow to perform Bayesian classification with non-parametric pdfs.
 
 Let's consider $C$ classes $\{\omega_1, \dots, \omega_C\}$, each represented by $N_i$ samples $\{\bm x_{i,k}, \dots, \bm x_{i,N_i}\} \in \mathbb R^n$.
@@ -2154,8 +2155,7 @@ The PNN architecture implements the above formula with artificial neurons.
 \end{center}
 
 In the pattern layer, there are $N_i$ neurons for each class $\omega_i$.
-The activation function $F_{i,k}(\bm x)$ of each neuron of the $(i, k)$-th neuron is defined as
-
+The activation function $F_{i,k}(\bm x)$ of the $(i, k)$-th neuron is defined as
 \begin{align*}
     F_{i,k}(\bm x)
     &= \exp(-\frac{(\bm x - \bm x_{i,k})^2}{2 \sigma^2}) \\
@@ -2171,30 +2171,30 @@ F_{i,k}(\bm x)
 
 This can be implemented with a perceptron
 \begin{itemize}
-    \item whose weights are $w_{i,k}$
-    \item whose activation function is $f(\bm t) = \exp(\frac{\sum_i t_i - 1}{\sigma})$
+    \item whose weights are $w_{i,k}$, and
+    \item whose activation function is $f(\bm t) = \exp(\frac{\sum_i t_i - 1}{\sigma})$.
 \end{itemize}
 
 Thus, the pattern layer memorizes the training samples!
 
 PNN training means:
 \begin{itemize}
-    \item determining the smoothing parameter $\sigma$
-    \item computing the weights of the pattern neurons (determined directly from the training samples)
-    \item computing the coefficients of the output layer
+    \item determining the smoothing parameter $\sigma$,
+    \item computing the weights of the pattern neurons (determined directly from the training samples), and
+    \item computing the coefficients of the output layer.
 \end{itemize}
 
-The advantages of PNNs are
+The advantages of PNNs are that
 \begin{itemize}
-    \item only have one free parameter to be tuned
-    \item can be trained fast
-    \item asymptotically converge to Bayesian error
+    \item only have one free parameter to be tuned,
+    \item can be trained fast, and
+    \item asymptotically converge to Bayesian error.
 \end{itemize}
 
 On the other hand, PNNs
 \begin{itemize}
-    \item require high memory usage
-    \item have a slow classification process
+    \item require high memory usage, and
+    \item have a slow classification process.
 \end{itemize}
 
 
@@ -2205,7 +2205,7 @@ This increases the number of parameters used, but also the training time
 
 
 
-\subsection{Regression with ANNs}
+\section{Regression with ANNs}
 Assume to have $N$ couples of training samples $\{ (\bm x_i, \bm y_i), i = 1, \dots, N\}$, where
 \begin{itemize}
     \item $\bm x_i$ is a feature vector in $\mathbb R^n$, and
@@ -2221,11 +2221,10 @@ This can be implemented in different ways:
 \end{itemize}
 
 
-\subsection{General Regression Neural Networks}
+\section{General Regression Neural Networks}
 Consider the case where part of the available training samples $(\bm x_i, y_i), i = 1, \dots, N$ have the same value for the input $\bm x_i = \bm x$, but different output values.
 How can we chose the best output value $\widehat y$ of our regressor given an input $\bm x$?
 We might consider taking the mean of the different $y_i$ values, i.e.
-
 \begin{align*}
     \widehat y
     &= \E{y_i | \bm x_i = \bm x} \\
@@ -2450,7 +2449,7 @@ The logistic regression maps all the real values to a value in the $[0,1]$ inter
 The softmax performs a similar operation, but takes $k$ real values in input and outputs $k$ values in the $[0,1]$ interval.
 Moreover, the $k$ output variables always sum to 1.
 
-Logistic and softmax regression are not optimal, but they are easy to include in an architecture as they can be trained with backpropagation algorithms.
+Logistic and softmax regression are not optimal, but they are easy to include in an architecture as they can be trained with back-propagation algorithms.
 
 
 
@@ -2990,7 +2989,7 @@ Suppose that $f(\bm x)$ is a real-valued function that will be thresholded at 0 
 $$ y = \sgn\{f(\bm x)\} $$
 The functional margin $\gamma_i$ of $f(\cdot)$ on the $i$-th training sample $(\bm x_i, y_i)$ is
 $$ \gamma_i = y_i f(\bm x_i) $$
-The (functional) margin distribution $M_S(f)$ for $f(\cdot)$ over the trainins set $S = \{ (\bm x_i, y_i) : i = 1, \dots, N \}$ is then
+The (functional) margin distribution $M_S(f)$ for $f(\cdot)$ over the training set $S = \{ (\bm x_i, y_i) : i = 1, \dots, N \}$ is then
 $$ M_S(f) = \{ \gamma_i : i = 1, \dots, N \} $$
 The margin with respect to the whole training set $S$ is defined as the minimum over the the margin distribution $M_S(f)$
 $$ \gamma = \min\{ M_S(f) \} $$
@@ -3130,7 +3129,6 @@ Resuming, the optimal solution is the one
 \end{itemize}
 
 This yields us to the \textbf{Primal Optimization Problem} for the MMC.
-
 \begin{align*}
     &\text{Minimize   } \quad \psi(\bm w) = \frac{1}{2} \norm{\bm w}^2 \\
     &\text{Subject to } \quad y_i f(\bm x_i) \geq 1 \quad \text{for } i = 1, \dots, N
@@ -3164,7 +3162,6 @@ The KT theorem will be also useful for other SVMs shown later.
 
 We will now apply the KKT conditions to our problem.
 We'll rewrite the constraints to make the constraint function $g_i(\bm w)$ more explicit.
-
 \begin{align*}
     &\text{Minimize   } \quad \psi(\bm w) = \frac{1}{2} \norm{\bm w}^2 \\
     &\text{Subject to } \quad g_i(\bm w) = 1 - y_i f(\bm x_i) = 1 - y_i (\inp{\bm w}{\bm x_i} + b) \leq 0 \quad \text{for } i = 1, \dots, N
@@ -3274,7 +3271,7 @@ Now the geometric margin $\gamma$ will be defined within the transformed space.
 If $K(\cdot)$ satisfies the Mercer's condition (is positive semi-definite), then the optimization problem is again quadratic with a unique solution.
 
 \section{Sparseness}
-Another bount on the generalization error can be derived by using the leave-one-out error estimation method.
+Another bound on the generalization error can be derived by using the leave-one-out error estimation method.
 Since, when a non-SV sample is omitted during training, the result does not change, then we can found the following bound on the number of errors
 $$ \text{err}(f) \leq \frac{\#\text{SV}}{N} $$
 
@@ -3493,7 +3490,6 @@ We can redefine the margin slack vector as
 $$ \xi((\bm x_i, y_i), f, \theta, \gamma) = L^{\theta - \gamma}(\bm x_i, y_i, f) $$
 
 We can then try to minimize the sum of the $\eps$-insensitive quadratic losses and the norm of the weight vector $\bm w$.
-
 \begin{align*}
     &\text{Minimize   } \quad \psi(\bm w, \bm \xi, \widehat {\bm \xi}) = \frac{1}{2} \norm{\bm w}^2 + C \sum_{i = 1}^N (\xi_i^2 + \widehat \xi_i^2) \\
     &\text{Subject to } \quad \begin{dcases}
