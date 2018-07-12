@@ -656,7 +656,7 @@ $$ k(N) = \sqrt{N} $$
 \subsection{Parzen window estimator}
 In order to compute an estimate $\widehat \pdf(x^*)$ of the probability $\pdf(x^*)$ of a given sample $x^*$, follow these steps:
 \begin{enumerate}
-    \item Define the a region $R$ of volume $V$ having a predetermined shape and centered in $x^*$
+    \item Define the region $R$ of volume $V$ having a predetermined shape and centered in $x^*$
     \item Count the number $k$ of test samples that fall into the region $R$
     \item Compute $\widehat \pdf(x^*)$ as
     $$ \widehat \pdf(x^*) = \frac{k}{N V} $$
@@ -1936,7 +1936,7 @@ It is an iterative algorithm following these steps:
 \begin{enumerate}
     \item Choose a MRF model for $I$, and label each pixel with the class that minimizes the energy, but without considering the other pixels (i.e. setting $U_\text{context} = 0$)
     \item In raster scan order, update the class of each pixel in order to minimize the energy, also considering the context/spatial information.
-    \item Go back to space 2.
+    \item Go back to step 2.
 \end{enumerate}
 
 The ICN algorithm has a solid theoretical foundation, and can achieve very high accuracies.
@@ -2101,21 +2101,21 @@ The algorithm must be configured with a number $k$ of expected classes (in this 
 
 The algorithm's steps are the following
 \begin{enumerate}
-    \item Randomly choose $k$ samples as initial guesses for the barycenters, each related to a different cluster
-    \item Assign each of the remaining samples to the cluster whose barycenter is closest
-    \item Update the barycenters of the clusters as the average of the positions of each sample
-    \item Go back to step 2
+    \item Randomly choose $k$ samples as initial guesses for the barycenters, each related to a different cluster.
+    \item Assign each of the remaining samples to the cluster whose barycenter is closest.
+    \item For each cluster, update the barycenters as the average of the positions of each sample assigned to the cluster in the previous step.
+    \item Go back to step 2, unless the algorithm has converged.
 \end{enumerate}
 
 The training of the weights of the output layer is very easy.
-Since the output layers have linear activation functions, the problem can be set as a lest square error minimization problem, ant solved with the pseudo-inverse technique.
+Since the output layers have linear activation functions, the problem can be set as a lest square error minimization problem, and solved with the pseudo-inverse technique.
 
-In general, the advantages of RBF are the following
+In general, the advantages of RBF NNs are the following
 \begin{itemize}
-    \item given enough neurons, they are universal approximators
-    \item provide posterior probability in output
-    \item they are easily trained
-    \item they have sample rejection capability: we can detect if a sample is very different (very far) from those used during the train
+    \item given enough neurons, RBF NNs are universal approximators
+    \item RBF NNs provide posterior probability in output
+    \item RBF NNs are easily trained
+    \item RBF NNs have sample rejection capability: we can detect if a sample is very different (very far) from those used during the training
 \end{itemize}
 
 On the other hand
@@ -2172,7 +2172,7 @@ F_{i,k}(\bm x)
 This can be implemented with a perceptron
 \begin{itemize}
     \item whose weights are $w_{i,k}$, and
-    \item whose activation function is $f(\bm t) = \exp(\frac{\sum_i t_i - 1}{\sigma})$.
+    \item whose activation function is $f_{i, k}(\bm t) = \exp(\frac{\sum_{k=1}^n w_{i, k} t_i - 1}{\sigma})$.
 \end{itemize}
 
 Thus, the pattern layer memorizes the training samples!
@@ -2181,10 +2181,10 @@ PNN training means:
 \begin{itemize}
     \item determining the smoothing parameter $\sigma$,
     \item computing the weights of the pattern neurons (determined directly from the training samples), and
-    \item computing the coefficients of the output layer.
+    \item computing the coefficients of the output layer (i.e. the priors).
 \end{itemize}
 
-The advantages of PNNs are that
+The advantages of PNNs are that they
 \begin{itemize}
     \item only have one free parameter to be tuned,
     \item can be trained fast, and
@@ -2212,16 +2212,26 @@ Assume to have $N$ couples of training samples $\{ (\bm x_i, \bm y_i), i = 1, \d
     \item $y_i$ is the desired output/target.
 \end{itemize}
 
-The objective is finding an approximating function $F(\bm x)$ which optimizes the a given accuracy criterion.
+The objective is finding an approximating function $F(\bm x)$ which optimizes a given accuracy criterion.
 
-This can be implemented in different ways:
+This can be implemented in different ways using the architectures explained before:
 \begin{itemize}
-    \item with an MLP, with two hidden layers, or
-    \item with a RBF.
+    \item with an MLP:
+    \begin{itemize}
+        \item use a single perceptron in the output layer,
+        \item use a linear activation function for the output layer,
+        \item as many hidden layers as needed.
+    \end{itemize}
+
+    \item with a RBF:
+    \begin{itemize}
+        \item remove the winner takes all at the end,
+        \item use a single neuron in the output layer.
+    \end{itemize}
 \end{itemize}
 
 
-\section{General Regression Neural Networks}
+\subsection{General Regression Neural Networks}
 Consider the case where part of the available training samples $(\bm x_i, y_i), i = 1, \dots, N$ have the same value for the input $\bm x_i = \bm x$, but different output values.
 How can we chose the best output value $\widehat y$ of our regressor given an input $\bm x$?
 We might consider taking the mean of the different $y_i$ values, i.e.
@@ -2240,7 +2250,7 @@ First we consider the distribution of $\bm x$.
 \begin{align*}
     \widehat \pdf(\bm x)
     &= \frac{1}{N} \sum_{\bm x_i \in X} \frac{1}{V(h)} \gamma\left( \frac{\bm x - \bm x_i}{h} \right) \\
-    &= \frac{1}{N} \sum_{\bm x_i \in X} \frac{1}{(2 * \pi * \sigma^2)^{n/2}} \exp(- \frac{(\bm x - \bm x_i)^T (\bm x - \bm x_i)}{2 \sigma^2})
+    &= \frac{1}{N} \sum_{\bm x_i \in X} \frac{1}{(2 \pi \sigma^2)^{n/2}} \exp(- \frac{(\bm x - \bm x_i)^T (\bm x - \bm x_i)}{2 \sigma^2})
 \end{align*}
 where $X$ is the set of the training samples.
 
