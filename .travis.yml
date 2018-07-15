@@ -35,12 +35,10 @@ before_script:
   - tlmgr install cancel
 
 script:
-  - pdflatex -halt-on-error -interaction nonstopmode document.tex
-  # IF REFERENCES ARE PRESENT
-  # - pdflatex -halt-on-error -interaction nonstopmode document.tex &&
-  #   bibtex document.tex &&
-  #   pdflatex -halt-on-error -interaction nonstopmode document.tex &&
-  #   pdflatex -halt-on-error -interaction nonstopmode document.tex
+  - pdflatex -halt-on-error -interaction nonstopmode document
+  - bibtex document
+  - pdflatex -halt-on-error -interaction nonstopmode document
+  - pdflatex -halt-on-error -interaction nonstopmode document
 
 before_deploy:
   # Set up git user name and tag this commit
