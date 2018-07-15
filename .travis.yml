@@ -35,9 +35,11 @@ before_script:
   - tlmgr install cancel
 
 script:
+  # Uncomment the two following lines if references are used
+  #- pdflatex -halt-on-error -interaction nonstopmode document
+  #- bibtex document
   - pdflatex -halt-on-error -interaction nonstopmode document
-  - bibtex document
-  - pdflatex -halt-on-error -interaction nonstopmode document
+  # Run a second time to populate the Table of Contents
   - pdflatex -halt-on-error -interaction nonstopmode document
 
 before_deploy:
