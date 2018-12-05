@@ -895,7 +895,8 @@ Let $F = \{ x_1, \dots, x_2 \}$ be the set of $n$ available features.
 Denote with $f_k$ and $f_{\overline k}$ the $k$-th selected and discarded features.
 
 The goal is to select a subset $F^*$ of $F$ comprising $m < n$ features such that
-$$ F^* =\underset{\substack{ F' \subseteq F, \\  \text{card}(F') = m}}{\text{arg max}} \left\{ J(F') \right\} $$
+$$ F^* =\underset{\substack{ F' \subseteq F, \\  \text{card}\{F'\} = m}}{\text{arg max}} \left\{ J(F') \right\} $$
+where $\text{card}\{F'\}$ is the cardinality of $F'$.
 
 where $J(\cdot)$ is a function that measures the separability between the classes in the space defined by the considered subset of features.
 
@@ -1109,7 +1110,7 @@ The within-class scatter matrix $S_W$ becomes
 $$ S_W = \sum_{i = 1}^C S_i $$
 
 and the between-class scatter matrix $S_B$ is
-$$ S_B = \sum_{i = 1}^C \text{card}(\bm X_i) (\bm m_i - \bm m) (\bm m_i - \bm m)^t $$
+$$ S_B = \sum_{i = 1}^C \text{card}\{\bm X_i\} (\bm m_i - \bm m) (\bm m_i - \bm m)^t $$
 where $\bm m$ is the global mean vector
 $$ \bm m = \frac{1}{2} \sum_{\bm x \in \bm X} \bm x $$
 
