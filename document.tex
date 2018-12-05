@@ -539,7 +539,7 @@ $$ \widehat \pdf(x) = \pdf(x | X) $$
 Let us introduce $\bm \theta$ so that
 $$ \widehat \pdf(x) = \pdf(x | X) = \int \pdf(x, \theta | X) \dd \theta $$
 
-By applying Bayes' theorem (????)
+By applying Bayes' theorem
 $$ \widehat \pdf(x)
 = \int \pdf(x, \theta | X) \dd \theta
 = \int \pdf(x | \theta, X) \pdf(\theta | X) \dd \theta
@@ -577,7 +577,7 @@ Assume that $R$ is small enough so that $\pdf(x)$ is constant $\forall x \in R$.
 
 Moreover, the probability that a sample $x$ falls into the $R$ region should be
 $$ \pdf(x \in R) = \int_R \pdf(x) \dd x = \pdf(x) V $$
-where $V$ is the volume of $R$. ????
+where $V$ is the volume of $R$.
 We can rewrite this as a relative frequency
 $$ \pdf(x \in R) = \frac{k}{N} $$
 where $k$ is the number of samples in $R$, and $N$ the overall number of samples.
@@ -843,7 +843,7 @@ More like a framework rather then a method.
 It is used for
 \begin{itemize}
     \item addressing the incomplete data problem: some of the data available is not 2D as expected but only has 1D (e.g. one of the 2 sensors used was shut down). Thus the second variable is itself an unknown.
-    \item estimating a multi-modal distribution: we know that a distribution a number of modes, and the mode depends on a variable which is not known. This can be considered a form of incomplete data problem.
+    \item estimating a multi-modal distribution: we know that a distribution has a number of modes, and each mode depends on a variable which is not known. This can be considered a form of incomplete data problem.
 \end{itemize}
 
 We would like to maximize the likelihood function.
